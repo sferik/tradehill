@@ -1,4 +1,4 @@
-require 'TradeHill/client'
+require 'tradehill/client'
 
 module TradeHill
   # Alias for TradeHill::Client.new
