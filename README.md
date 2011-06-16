@@ -1,38 +1,15 @@
-# Ruby wrapper for the Mt. Gox Trade API
+# Ruby wrapper for the TradeHill API
 
-Mt. Gox allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins for
-US Dollars.
+TradeHill allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins
+for US Dollars.
 
 Installation
 ------------
     gem install tradehill
 
-Alias
------
-After installing the gem, you can get the current price for 1 BTC in USD by
-typing `btc` in your bash shell simply by setting the following alias:
-
-    alias btc='ruby -r rubygems -r tradehill -e "puts TradeHill.ticker.last"'
-
 Documentation
 -------------
 [http://rdoc.info/gems/tradehill](http://rdoc.info/gems/tradehill)
-
-Donate
-------
-If you find this library useful, please consider sending a donation to the
-author, which you can do using the following script:
-
-    require 'rubygems'
-    require 'tradehill'
-
-    # Certain methods require authentication
-    TradeHill.configure do |config|
-      config.name = YOUR_MTGOX_USERNAME
-      config.pass = YOUR_MTGOX_PASSWORD
-    end
-
-    TradeHill.send 1.0, "1KxSo9bGBfPVFEtWNLpnUK1bfLNNT4q31L"
 
 Continuous Integration
 ----------------------
@@ -43,9 +20,6 @@ Usage Examples
     require 'rubygems'
     require 'tradehill'
 
-    # Fetch the latest price for 1 BTC in USD
-    puts TradeHill.ticker.last
-
     # Fetch open asks
     puts TradeHill.asks
 
@@ -54,27 +28,6 @@ Usage Examples
 
     # Fetch the last 48 hours worth of trades (takes a minute)
     puts TradeHill.trades
-
-    # Certain methods require authentication
-    TradeHill.configure do |config| [TODO]
-      config.name = YOUR_MTGOX_USERNAME
-      config.pass = YOUR_MTGOX_PASSWORD
-    end
-
-    # Get your current balance
-    puts TradeHill.balance [TODO]
-
-    # Place an order to buy 1 BTC for 20 USD (returns a list of your open orders)
-    puts TradeHill.buy 1.0, 20.0 [TODO]
-
-    # Place an order to sell 1 BTC for 20 USD (returns a list of your open orders)
-    puts TradeHill.sell 1.0, 20.0 [TODO]
-
-    # Cancel order #1234567890
-    puts TradeHill.cancel 1234567890 [TODO]
-
-    # Send 1 BTC to the author of this gem
-    puts TradeHill.send 1.0, "1KxSo9bGBfPVFEtWNLpnUK1bfLNNT4q31L" [TODO]
 
 Contributing
 ------------
