@@ -14,10 +14,10 @@ module TradeHill
     def ticker
       ticker = get('/APIv1/USD/Ticker')['ticker']
       ticker['buy']  = ticker['buy'].to_f
-      ticker['sell'] = ticker['sell'].to_f
       ticker['high'] = ticker['high'].to_f
-      ticker['low']  = ticker['low'].to_f
       ticker['last'] = ticker['last'].to_f
+      ticker['low']  = ticker['low'].to_f
+      ticker['sell'] = ticker['sell'].to_f
       ticker['vol']  = ticker['vol'].to_i
       ticker
     end
@@ -65,9 +65,9 @@ module TradeHill
     #   TradeHill.trades
     def trades
       get('/APIv1/USD/Trades').each do |t|
+        t['amount'] = t['amount'].to_f
         t['date'] = Time.at(t['date'].to_i)
         t['price'] = t['price'].to_f
-        t['amount'] = t['amount'].to_f
       end
     end
   end
