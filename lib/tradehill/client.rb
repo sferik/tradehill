@@ -10,7 +10,7 @@ module TradeHill
     #
     # @return [Hashie::Rash]
     # @example
-    #   MtGox.ticker
+    #   TradeHill.ticker
     def ticker
       ticker = get('/APIv1/USD/Ticker')['ticker']
       ticker['buy']  = ticker['buy'].to_f
