@@ -5,6 +5,24 @@ describe TradeHill::Client do
     @client = TradeHill::Client.new
   end
 
+  describe '#ticker' do
+    before do
+      stub_get('/APIv1/USD/Ticker').
+        to_return(:status => 200, :body => fixture('ticker.json'))
+    end
+
+    it "should fetch the latest ticker data" do
+      ticker = @client.ticker
+      a_get('/APIv1/USD/Ticker').should have_been_made
+      ticker.buy.should  == 12.62000002
+      ticker.sell.should == 12.7
+      ticker.high.should == 0.0
+      ticker.low.should  == 0.0
+      ticker.last.should == 12.68
+      ticker.vol.should  == 0
+    end
+  end
+
   describe '#asks' do
     before do
       stub_get('/APIv1/USD/Orderbook').
