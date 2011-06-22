@@ -22,30 +22,6 @@ module TradeHill
       ticker
     end
 
-    # Fetch open asks
-    #
-    # @return [Array<Numeric>]
-    # @example
-    #   TradeHill.asks
-    def asks
-      get('/APIv1/USD/Orderbook')['asks'].each do |o|
-        o[0] = o[0].to_f
-        o[1] = o[1].to_f
-      end
-    end
-
-    # Fetch open bids
-    #
-    # @return [Array<Numeric>]
-    # @example
-    #   TradeHill.bids
-    def bids
-      get('/APIv1/USD/Orderbook')['bids'].each do |o|
-        o[0] = o[0].to_f
-        o[1] = o[1].to_f
-      end
-    end
-
     # Fetch both bids and asks in one call, for network efficiency
     #
     # @return [Hashie::Rash]
@@ -62,6 +38,24 @@ module TradeHill
         o[1] = o[1].to_f
       end
       offers
+    end
+
+    # Fetch open asks
+    #
+    # @return [Array<Numeric>]
+    # @example
+    #   TradeHill.asks
+    def asks
+      offers['asks']
+    end
+
+    # Fetch open bids
+    #
+    # @return [Array<Numeric>]
+    # @example
+    #   TradeHill.bids
+    def bids
+      offers['bids']
     end
 
     # Fetch recent trades
