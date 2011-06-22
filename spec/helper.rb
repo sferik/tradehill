@@ -14,6 +14,14 @@ def stub_get(path)
   stub_request(:get, 'https://api.tradehill.com' + path)
 end
 
+def a_post(path)
+  a_request(:post, 'https://api.tradehill.com' + path)
+end
+
+def stub_post(path)
+  stub_request(:post, 'https://api.tradehill.com' + path)
+end
+
 def fixture_path
   File.expand_path('../fixtures', __FILE__)
 end

@@ -1,6 +1,13 @@
 require 'tradehill/client'
 
 module TradeHill
+  class << self
+    attr_accessor :name, :pass
+    def configure
+      yield self
+    end
+  end
+
   # Alias for TradeHill::Client.new
   #
   # @return [TradeHill::Client]

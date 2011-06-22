@@ -3,6 +3,10 @@ require 'helper'
 describe TradeHill::Client do
   before do
     @client = TradeHill::Client.new
+    TradeHill.configure do |config|
+      config.name = "my_name"
+      config.pass = "my_password"
+    end
   end
 
   describe '#ticker' do
@@ -76,6 +80,105 @@ describe TradeHill::Client do
       trades.last.price.should == 19.25
       trades.last.amount.should == 0.15
       trades.last.tid.should == "4251"
+    end
+  end
+
+  describe '#balance' do
+    before do
+      stub_post('/APIv1/USD/GetBalance').
+        to_return(:status => 200, :body => fixture('balance.json'))
+    end
+
+    it "should fetch balance" do
+      balance = @client.balance
+      a_post("/APIv1/USD/GetBalance").should have_been_made
+      balance.usd.should == 1000.0
+      balance.btc.should == 1000.0
+    end
+  end
+
+  describe "order methods" do
+    before :each do
+      stub_post('/APIv1/USD/GetOrders').
+        to_return(:status => 200, :body => fixture('orders.json'))
+    end
+
+    describe "#buys" do
+      it "should fetch orders" do
+        buys = @client.buys
+        a_post("/APIv1/USD/GetOrders").should have_been_made
+        buys.last.price.should == 0.011
+      end
+    end
+
+    describe "#sells" do
+      it "should fetch sells" do
+        sells = @client.sells
+        a_post("/APIv1/USD/GetOrders").should have_been_made
+        sells.last.price.should == 30
+      end
+    end
+
+    describe "#orders" do
+      it "should fetch both buys and sells, with only one call" do
+        orders = @client.orders
+        a_post("/APIv1/USD/GetOrders").should have_been_made.once
+        orders.last.price.should == 30
+      end
+    end
+  end
+
+  describe "#buy!" do
+    before do
+      stub_post('/APIv1/USD/BuyBTC').
+        to_return(:status => 200, :body => fixture('orders.json'))
+    end
+
+    it "should place a bid" do
+      @client.buy!(0.88, 0.89)
+      a_post("/APIv1/USD/BuyBTC").
+        with(:body => {"name" => "my_name", "pass" => "my_password", "amount" => "0.88", "price" => "0.89"}).
+        should have_been_made
+    end
+  end
+
+  describe "#sell!" do
+    before do
+      stub_post('/APIv1/USD/SellBTC').
+        to_return(:status => 200, :body => fixture('orders.json'))
+    end
+
+    it "should place an ask" do
+      @client.sell!(0.88, 89.0)
+      a_post("/APIv1/USD/SellBTC").
+        with(:body => {"name" => "my_name", "pass" => "my_password", "amount" => "0.88", "price" => "89.0"}).
+        should have_been_made
+    end
+  end
+
+  describe "#cancel" do
+    before do
+      stub_post('/APIv1/USD/CancelOrder').
+        with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
+        to_return(:status => 200, :body => fixture('orders.json'))
+    end
+
+    context "with an oid passed" do
+      it "should cancel an order" do
+        @client.cancel(3166)
+        a_post('/APIv1/USD/CancelOrder').
+          with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
+          should have_been_made
+      end
+    end
+
+    context "with an order passed" do
+      it "should cancel an order" do
+        @client.cancel({'oid' => "3166"})
+        a_post('/APIv1/USD/CancelOrder').
+          with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
+          should have_been_made
+      end
     end
   end
 end
