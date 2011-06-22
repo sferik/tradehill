@@ -7,6 +7,13 @@ Installation
 ------------
     gem install tradehill
 
+Alias
+-----
+After installing the gem, you can get the current price for 1 BTC in USD by
+typing `btc` in your bash shell simply by setting the following alias:
+
+    alias btc='ruby -r rubygems -r tradehill -e "puts Tradehill.ticker.last"'
+
 Documentation
 -------------
 [http://rdoc.info/gems/tradehill](http://rdoc.info/gems/tradehill)
