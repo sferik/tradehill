@@ -46,6 +46,24 @@ module TradeHill
       end
     end
 
+    # Fetch both bids and asks in one call, for network efficiency
+    #
+    # @return [Hashie::Rash]
+    # @example
+    #   TradeHill.offers
+    def offers
+      offers = get('/APIv1/USD/Orderbook')
+      offers['asks'].each do |o|
+        o[0] = o[0].to_f
+        o[1] = o[1].to_f
+      end
+      offers['bids'].each do |o|
+        o[0] = o[0].to_f
+        o[1] = o[1].to_f
+      end
+      offers
+    end
+
     # Fetch recent trades
     #
     # @return [Array<Hashie::Rash>]

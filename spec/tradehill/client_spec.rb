@@ -49,6 +49,20 @@ describe TradeHill::Client do
     end
   end
 
+  describe '#offers' do
+    before do
+      stub_get('/APIv1/USD/Orderbook').
+        to_return(:status => 200, :body => fixture('orderbook.json'))
+    end
+
+    it "should fetch both bids and asks in one call" do
+      offers = @client.offers
+      a_get('/APIv1/USD/Orderbook').should have_been_made.once
+      offers.asks.last.should == [30.0, 1.0]
+      offers.bids.last.should == [18.5, 75.0]
+    end
+  end
+
   describe '#trades' do
     before do
       stub_get('/APIv1/USD/Trades').
