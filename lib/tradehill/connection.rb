@@ -1,4 +1,5 @@
 require 'faraday_middleware'
+require 'tradehill/version'
 
 module TradeHill
   module Connection
@@ -6,6 +7,9 @@ module TradeHill
 
     def connection(options={})
       options = {
+         :headers  => {
+           :user_agent => "tradehill gem #{TradeHill::VERSION}",
+         },
         :ssl => {:verify => false},
         :url => 'https://api.tradehill.com',
       }.merge(options)
