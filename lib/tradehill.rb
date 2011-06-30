@@ -1,12 +1,9 @@
 require 'tradehill/client'
+require 'tradehill/configuration'
 
 module TradeHill
+  extend Configuration
   class << self
-    attr_accessor :name, :pass
-    def configure
-      yield self
-    end
-
     # Alias for TradeHill::Client.new
     #
     # @return [TradeHill::Client]

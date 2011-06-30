@@ -14,13 +14,17 @@ module TradeHill
       response = connection.send(method) do |request|
         case method
         when :get
-          request.url(path, options)
+          request.url(qualified_path(path), options)
         when :post
-          request.path = path
+          request.path = qualified_path(path)
           request.body = options unless options.empty?
         end
       end
       response.body
+    end
+
+    def qualified_path(path)
+      ["APIv#{version}", currency, path].join('/')
     end
   end
 end

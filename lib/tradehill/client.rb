@@ -1,3 +1,4 @@
+require 'tradehill/configuration'
 require 'tradehill/connection'
 require 'tradehill/request'
 
@@ -5,8 +6,16 @@ module TradeHill
   class Client
     include TradeHill::Connection
     include TradeHill::Request
+    attr_accessor *Configuration::VALID_OPTIONS_KEYS
 
     ORDER_TYPES = {:sell => 1, :buy => 2}
+
+    def initialize(options={})
+      options = TradeHill.options.merge(options)
+      Configuration::VALID_OPTIONS_KEYS.each do |key|
+        send("#{key}=", options[key])
+      end
+    end
 
     # Fetch the latest ticker data
     #
@@ -14,7 +23,7 @@ module TradeHill
     # @example
     #   TradeHill.ticker
     def ticker
-      ticker = get('/APIv1/USD/Ticker')['ticker']
+      ticker = get('Ticker')['ticker']
       ticker['buy']  = ticker['buy'].to_f
       ticker['high'] = ticker['high'].to_f
       ticker['last'] = ticker['last'].to_f
@@ -30,7 +39,7 @@ module TradeHill
     # @example
     #   TradeHill.offers
     def offers
-      offers = get('/APIv1/USD/Orderbook')
+      offers = get('Orderbook')
       offers['asks'].each do |o|
         o[0] = o[0].to_f
         o[1] = o[1].to_f
@@ -66,7 +75,7 @@ module TradeHill
     # @example
     #   TradeHill.trades
     def trades
-      get('/APIv1/USD/Trades').each do |t|
+      get('Trades').each do |t|
         t['amount'] = t['amount'].to_f
         t['date'] = Time.at(t['date'].to_i)
         t['price'] = t['price'].to_f
@@ -79,7 +88,7 @@ module TradeHill
     # @example
     #   TradeHill.balance
     def balance
-      balance = post('/APIv1/USD/GetBalance', pass_params)
+      balance = post('GetBalance', pass_params)
       balance['BTC'] = balance['BTC'].to_f
       balance['USD'] = balance['USD'].to_f
       balance
@@ -91,7 +100,7 @@ module TradeHill
     # @example
     #   TradeHill.orders
     def orders
-      parse_orders(post('/APIv1/USD/GetOrders', pass_params)['orders'])
+      parse_orders(post('GetOrders', pass_params)['orders'])
     end
 
     # Fetch your open buys
@@ -125,7 +134,7 @@ module TradeHill
     #   # Buy one bitcoin for $0.011
     #   TradeHill.buy! 1.0, 0.011
     def buy!(amount, price)
-      parse_orders(post('/APIv1/USD/BuyBTC', pass_params.merge({:amount => amount, :price => price}))['orders'])
+      parse_orders(post('BuyBTC', pass_params.merge({:amount => amount, :price => price}))['orders'])
     end
 
     # Place a limit order to sell BTC
@@ -137,7 +146,7 @@ module TradeHill
     #   # Sell one bitcoin for $100
     #   TradeHill.sell! 1.0, 100.0
     def sell!(amount, price)
-      parse_orders(post('/APIv1/USD/SellBTC', pass_params.merge({:amount => amount, :price => price}))['orders'])
+      parse_orders(post('SellBTC', pass_params.merge({:amount => amount, :price => price}))['orders'])
     end
 
     # Cancel an open order
@@ -159,9 +168,9 @@ module TradeHill
     def cancel(args)
       if args.is_a?(Hash)
         order = args.delete_if{|k, v| 'oid' != k.to_s}
-        parse_orders(post('/APIv1/USD/CancelOrder', pass_params.merge(order))['orders'])
+        parse_orders(post('CancelOrder', pass_params.merge(order))['orders'])
       else
-        parse_orders(post('/APIv1/USD/CancelOrder', pass_params.merge(:oid => args))['orders'])
+        parse_orders(post('CancelOrder', pass_params.merge(:oid => args))['orders'])
       end
     end
 
@@ -177,7 +186,7 @@ module TradeHill
     end
 
     def pass_params
-      {:name => TradeHill.name, :pass => TradeHill.pass}
+      {:name => name, :pass => pass}
     end
   end
 end
