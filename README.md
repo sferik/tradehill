@@ -1,7 +1,6 @@
 # Ruby wrapper for the TradeHill API
 
-TradeHill allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins
-for US Dollars.
+TradeHill is a Bitcoin exchange that supports 26 currencies.
 
 Installation
 ------------
@@ -35,6 +34,25 @@ Usage Examples
 
     # Fetch the last 48 hours worth of trades (takes a minute)
     puts TradeHill.trades
+
+    # Certain methods require authentication
+    TradeHill.configure do |config|
+      config.currency = "USD" # This is the default
+      config.name = YOUR_TRADEHILL_USERNAME
+      config.pass = YOUR_TRADEHILL_PASSWORD
+    end
+
+    # Get your current balance
+    puts TradeHill.balance
+
+    # Place a limit order to buy one bitcoin for $0.011
+    TradeHill.buy! 1.0, 0.011
+
+    # Place a limit order to sell one bitcoin for $100
+    TradeHill.sell! 1.0, 100.0
+
+    # Cancel order 1234567890
+    TradeHill.cancel "1234567890"
 
 Contributing
 ------------
