@@ -1,4 +1,6 @@
+require 'faraday'
 require 'faraday_middleware'
+require 'faraday/response/raise_tradehill_error'
 require 'tradehill/version'
 
 module TradeHill
@@ -16,6 +18,7 @@ module TradeHill
 
       Faraday.new(options) do |connection|
         connection.use Faraday::Request::UrlEncoded
+        connection.use Faraday::Response::RaiseTradeHillError
         connection.use Faraday::Response::RaiseError
         connection.use Faraday::Response::Rashify
         connection.use Faraday::Response::ParseJson

@@ -1,5 +1,6 @@
 require 'tradehill/client'
 require 'tradehill/configuration'
+require 'tradehill/error'
 
 module TradeHill
   extend Configuration
