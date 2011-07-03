@@ -90,7 +90,11 @@ module TradeHill
     def balance
       balance = post('GetBalance', pass_params)
       balance['BTC'] = balance['BTC'].to_f
+      balance['BTC_Available'] = balance['BTC_Available'].to_f
+      balance['BTC_Reserved'] = balance['BTC_Reserved'].to_f
       balance['USD'] = balance['USD'].to_f
+      balance['USD_Available'] = balance['USD_Available'].to_f
+      balance['USD_Reserved'] = balance['USD_Reserved'].to_f
       balance
     end
 

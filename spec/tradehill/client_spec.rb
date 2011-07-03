@@ -95,8 +95,8 @@ describe TradeHill::Client do
         it "should fetch balance" do
           balance = @client.balance
           a_post("/APIv1/#{currency}/GetBalance").should have_been_made
-          balance.usd.should == 1000.0
-          balance.btc.should == 1000.0
+          balance.usd.should == 2.3450318173
+          balance.btc.should == 19.8514458363
         end
       end
 
