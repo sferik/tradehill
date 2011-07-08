@@ -4,11 +4,14 @@ module TradeHill
   module Configuration
     # An array of valid keys in the options hash when configuring a {TradeHill::Client}
     VALID_OPTIONS_KEYS = [
+      :commission,
       :currency,
       :name,
       :pass,
       :version,
     ]
+
+    DEFAULT_COMMISSION = 0.0054.freeze
 
     DEFAULT_CURRENCY = "USD".freeze
 
@@ -35,6 +38,7 @@ module TradeHill
 
     # Reset all configuration options to defaults
     def reset
+      self.commission = DEFAULT_COMMISSION
       self.currency   = DEFAULT_CURRENCY
       self.name       = nil
       self.pass       = nil
