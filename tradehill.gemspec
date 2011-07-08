@@ -3,7 +3,7 @@ require File.expand_path('../lib/tradehill/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name        = 'tradehill'
-  gem.version     = TradeHill::VERSION
+  gem.version     = TradeHill::VERSION.dup
   gem.author      = "Erik Michaels-Ober"
   gem.email       = 'sferik@gmail.com'
   gem.homepage    = 'https://github.com/sferik/tradehill'
