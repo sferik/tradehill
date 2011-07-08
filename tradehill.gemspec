@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.email       = 'sferik@gmail.com'
   gem.homepage    = 'https://github.com/sferik/tradehill'
   gem.summary     = %q{Ruby wrapper for the TradeHill API}
-  gem.description = %q{Ruby wrapper for the TradeHill API. TradeHill allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins for US Dollars.}
+  gem.description = %q{Ruby wrapper for the TradeHill API. TradeHill is a Bitcoin exchange that supports 26 currencies.}
 
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
