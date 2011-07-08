@@ -1,6 +1,6 @@
 require 'faraday'
-require 'faraday_middleware'
 require 'faraday/response/raise_tradehill_error'
+require 'faraday_middleware'
 require 'tradehill/version'
 
 module TradeHill

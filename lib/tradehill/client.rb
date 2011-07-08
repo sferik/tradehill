@@ -181,11 +181,11 @@ module TradeHill
     private
 
     def parse_orders(orders)
-      orders.each do |o|
-        o['amount'] = o['amount'].to_f
-        o['date'] = Time.at(o['date'])
-        o['price'] = o['price'].to_f
-        o['reserved_amount'] = o['reserved_amount'].to_f
+      orders.each do |order|
+        order['amount'] = order['amount'].to_f
+        order['date'] = Time.at(order['date'])
+        order['price'] = order['price'].to_f
+        order['reserved_amount'] = order['reserved_amount'].to_f
       end
     end
 
