@@ -1,6 +1,10 @@
 require 'faraday'
-require 'faraday/response/raise_tradehill_error'
 require 'faraday_middleware'
+require 'faraday/request/url_encoded'
+require 'faraday/response/raise_tradehill_error'
+require 'faraday/response/raise_error'
+require 'faraday/response/rashify'
+require 'faraday/response/parse_json'
 require 'tradehill/version'
 
 module TradeHill
