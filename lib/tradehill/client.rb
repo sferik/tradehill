@@ -45,10 +45,10 @@ module TradeHill
     def offers
       offers = get('Orderbook')
       offers['asks'] = offers['asks'].sort_by{|ask| ask[0].to_f}.map do |ask|
-        Ask.new({:price => ask[0].to_f, :amount => ask[1].to_f})
+        Ask.new(*ask)
       end
       offers['bids'] = offers['bids'].sort_by{|bid| bid[0].to_f}.reverse.map do |bid|
-        Bid.new({:price => bid[0].to_f, :amount => bid[1].to_f})
+        Bid.new(*bid)
       end
       offers
     end
@@ -87,7 +87,7 @@ module TradeHill
     # Fetch the highest priced bid
     #
     # @authenticated false
-    # @return [MinBin]
+    # @return [MinBid]
     # @example
     #   TradeHill.max_bid
     def max_bid
