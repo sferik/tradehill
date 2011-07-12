@@ -1,3 +1,5 @@
+require 'tradehill/ask'
+require 'tradehill/bid'
 require 'tradehill/configuration'
 require 'tradehill/connection'
 require 'tradehill/request'
@@ -40,20 +42,18 @@ module TradeHill
     #   TradeHill.offers
     def offers
       offers = get('Orderbook')
-      offers['asks'].each do |o|
-        o[0] = o[0].to_f
-        o[1] = o[1].to_f
+      offers['asks'] = offers['asks'].sort_by{|ask| ask[0].to_f}.map do |ask|
+        Ask.new({:price => ask[0].to_f, :amount => ask[1].to_f})
       end
-      offers['bids'].each do |o|
-        o[0] = o[0].to_f
-        o[1] = o[1].to_f
+      offers['bids'] = offers['bids'].sort_by{|bid| bid[0].to_f}.reverse.map do |bid|
+        Bid.new({:price => bid[0].to_f, :amount => bid[1].to_f})
       end
       offers
     end
 
     # Fetch open asks
     #
-    # @return [Array<Numeric>]
+    # @return [Array<Ask>]
     # @example
     #   TradeHill.asks
     def asks
@@ -62,7 +62,7 @@ module TradeHill
 
     # Fetch open bids
     #
-    # @return [Array<Numeric>]
+    # @return [Array<Bid>]
     # @example
     #   TradeHill.bids
     def bids

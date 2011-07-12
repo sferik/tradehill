@@ -39,7 +39,8 @@ describe TradeHill::Client do
         it "should fetch open asks" do
           asks = @client.asks
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made
-          asks.last.should == [30.0, 1.0]
+          asks.last.price.should == 50.0
+          asks.last.amount.should == 5.0
         end
       end
 
@@ -52,7 +53,8 @@ describe TradeHill::Client do
         it "should fetch open bids" do
           bids = @client.bids
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made
-          bids.last.should == [18.5, 75.0]
+          bids.last.price.should == 0.01
+          bids.last.amount.should == 100000.0
         end
       end
 
@@ -65,8 +67,10 @@ describe TradeHill::Client do
         it "should fetch both bids and asks in one call" do
           offers = @client.offers
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
-          offers.asks.last.should == [30.0, 1.0]
-          offers.bids.last.should == [18.5, 75.0]
+          offers.asks.last.price.should == 50.0
+          offers.asks.last.amount.should == 5.0
+          offers.bids.last.price.should == 0.01
+          offers.bids.last.amount.should == 100000.0
         end
       end
 
