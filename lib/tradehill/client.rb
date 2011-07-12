@@ -2,6 +2,8 @@ require 'tradehill/ask'
 require 'tradehill/bid'
 require 'tradehill/configuration'
 require 'tradehill/connection'
+require 'tradehill/max_bid'
+require 'tradehill/min_ask'
 require 'tradehill/request'
 
 module TradeHill
@@ -67,6 +69,32 @@ module TradeHill
     #   TradeHill.bids
     def bids
       offers['bids']
+    end
+
+    # Fetch the lowest priced ask
+    #
+    # @authenticated false
+    # @return [MinAsk]
+    # @example
+    #   TradeHill.min_ask
+    def min_ask
+      min_ask = asks.first
+      MinAsk.instance.price = min_ask.price
+      MinAsk.instance.amount = min_ask.amount
+      MinAsk.instance
+    end
+
+    # Fetch the highest priced bid
+    #
+    # @authenticated false
+    # @return [MinBin]
+    # @example
+    #   TradeHill.max_bid
+    def max_bid
+      max_bid = bids.first
+      MaxBid.instance.price = max_bid.price
+      MaxBid.instance.amount = max_bid.amount
+      MaxBid.instance
     end
 
     # Fetch recent trades

@@ -39,8 +39,8 @@ describe TradeHill::Client do
         it "should fetch open asks" do
           asks = @client.asks
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made
-          asks.last.price.should == 50.0
-          asks.last.amount.should == 5.0
+          asks.last.price.should == 200.0
+          asks.last.amount.should == 19.3
         end
       end
 
@@ -67,10 +67,38 @@ describe TradeHill::Client do
         it "should fetch both bids and asks in one call" do
           offers = @client.offers
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
-          offers.asks.last.price.should == 50.0
-          offers.asks.last.amount.should == 5.0
+          offers.asks.last.price.should == 200.0
+          offers.asks.last.amount.should == 19.3
           offers.bids.last.price.should == 0.01
           offers.bids.last.amount.should == 100000.0
+        end
+      end
+
+      describe '#min_ask' do
+        before do
+          stub_get("/APIv1/#{currency}/Orderbook").
+            to_return(:status => 200, :body => fixture('orderbook.json'))
+        end
+
+        it "should fetch the lowest priced ask" do
+          min_ask = @client.min_ask
+          a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
+          min_ask.price.should == 19.249999
+          min_ask.amount.should == 100.0
+        end
+      end
+
+      describe '#max_bid' do
+        before do
+          stub_get("/APIv1/#{currency}/Orderbook").
+            to_return(:status => 200, :body => fixture('orderbook.json'))
+        end
+
+        it "should fetch the highest priced bid" do
+          max_bid = @client.max_bid
+          a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
+          max_bid.price.should == 18.95
+          max_bid.amount.should == 2.0
         end
       end
 
