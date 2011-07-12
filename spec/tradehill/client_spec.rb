@@ -40,6 +40,7 @@ describe TradeHill::Client do
           asks = @client.asks
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made
           asks.last.price.should == 200.0
+          asks.last.eprice.should == 201.08586366378444
           asks.last.amount.should == 19.3
         end
       end
@@ -54,6 +55,7 @@ describe TradeHill::Client do
           bids = @client.bids
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made
           bids.last.price.should == 0.01
+          bids.last.eprice.should == 0.009946
           bids.last.amount.should == 100000.0
         end
       end
@@ -68,8 +70,10 @@ describe TradeHill::Client do
           offers = @client.offers
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
           offers.asks.last.price.should == 200.0
+          offers.asks.last.eprice.should == 201.08586366378444
           offers.asks.last.amount.should == 19.3
           offers.bids.last.price.should == 0.01
+          offers.bids.last.eprice.should == 0.009946
           offers.bids.last.amount.should == 100000.0
         end
       end
@@ -84,6 +88,7 @@ describe TradeHill::Client do
           min_ask = @client.min_ask
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
           min_ask.price.should == 19.249999
+          min_ask.eprice.should == 19.354513372209933
           min_ask.amount.should == 100.0
         end
       end
@@ -98,6 +103,7 @@ describe TradeHill::Client do
           max_bid = @client.max_bid
           a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
           max_bid.price.should == 18.95
+          max_bid.eprice.should == 18.84767
           max_bid.amount.should == 2.0
         end
       end
