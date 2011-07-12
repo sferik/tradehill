@@ -44,10 +44,10 @@ module TradeHill
     #   TradeHill.offers
     def offers
       offers = get('Orderbook')
-      offers['asks'] = offers['asks'].sort_by{|ask| ask[0].to_f}.map do |ask|
+      offers['asks'].sort_by!{|ask| ask[0].to_f}.map! do |ask|
         Ask.new(*ask)
       end
-      offers['bids'] = offers['bids'].sort_by{|bid| bid[0].to_f}.reverse.map do |bid|
+      offers['bids'].sort_by!{|bid| bid[0].to_f}.reverse!.map! do |bid|
         Bid.new(*bid)
       end
       offers
