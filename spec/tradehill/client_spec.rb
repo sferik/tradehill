@@ -20,7 +20,8 @@ describe TradeHill::Client do
 
         it "should fetch the latest ticker data" do
           ticker = @client.ticker
-          a_get("/APIv1/#{currency}/Ticker").should have_been_made
+          a_get("/APIv1/#{currency}/Ticker").
+            should have_been_made
           ticker.buy.should  == 12.62000002
           ticker.sell.should == 12.7
           ticker.high.should == 0.0
@@ -38,7 +39,8 @@ describe TradeHill::Client do
 
         it "should fetch open asks" do
           asks = @client.asks
-          a_get("/APIv1/#{currency}/Orderbook").should have_been_made
+          a_get("/APIv1/#{currency}/Orderbook").
+            should have_been_made
           asks.last.price.should == 200.0
           asks.last.eprice.should == 201.08586366378444
           asks.last.amount.should == 19.3
@@ -53,7 +55,8 @@ describe TradeHill::Client do
 
         it "should fetch open bids" do
           bids = @client.bids
-          a_get("/APIv1/#{currency}/Orderbook").should have_been_made
+          a_get("/APIv1/#{currency}/Orderbook").
+            should have_been_made
           bids.last.price.should == 0.01
           bids.last.eprice.should == 0.009946
           bids.last.amount.should == 100000.0
@@ -68,13 +71,14 @@ describe TradeHill::Client do
 
         it "should fetch both bids and asks in one call" do
           offers = @client.offers
-          a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
-          offers.asks.last.price.should == 200.0
-          offers.asks.last.eprice.should == 201.08586366378444
-          offers.asks.last.amount.should == 19.3
-          offers.bids.last.price.should == 0.01
-          offers.bids.last.eprice.should == 0.009946
-          offers.bids.last.amount.should == 100000.0
+          a_get("/APIv1/#{currency}/Orderbook").
+            should have_been_made.once
+          offers[:asks].last.price.should == 200.0
+          offers[:asks].last.eprice.should == 201.08586366378444
+          offers[:asks].last.amount.should == 19.3
+          offers[:bids].last.price.should == 0.01
+          offers[:bids].last.eprice.should == 0.009946
+          offers[:bids].last.amount.should == 100000.0
         end
       end
 
@@ -86,7 +90,8 @@ describe TradeHill::Client do
 
         it "should fetch the lowest priced ask" do
           min_ask = @client.min_ask
-          a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
+          a_get("/APIv1/#{currency}/Orderbook").
+            should have_been_made.once
           min_ask.price.should == 19.249999
           min_ask.eprice.should == 19.354513372209933
           min_ask.amount.should == 100.0
@@ -101,7 +106,8 @@ describe TradeHill::Client do
 
         it "should fetch the highest priced bid" do
           max_bid = @client.max_bid
-          a_get("/APIv1/#{currency}/Orderbook").should have_been_made.once
+          a_get("/APIv1/#{currency}/Orderbook").
+            should have_been_made.once
           max_bid.price.should == 18.95
           max_bid.eprice.should == 18.84767
           max_bid.amount.should == 2.0
@@ -116,7 +122,8 @@ describe TradeHill::Client do
 
         it "should fetch trades" do
           trades = @client.trades
-          a_get("/APIv1/#{currency}/Trades").should have_been_made
+          a_get("/APIv1/#{currency}/Trades").
+            should have_been_made
           trades.last.date.should == Time.utc(2011, 6, 16, 19, 07, 54)
           trades.last.price.should == 19.25
           trades.last.amount.should == 0.15
@@ -132,7 +139,8 @@ describe TradeHill::Client do
 
         it "should fetch balance" do
           balance = @client.balance
-          a_post("/APIv1/#{currency}/GetBalance").should have_been_made
+          a_post("/APIv1/#{currency}/GetBalance").
+            should have_been_made
           balance.usd.should == 2.3450318173
           balance.btc.should == 19.8514458363
         end
@@ -147,24 +155,32 @@ describe TradeHill::Client do
         describe "buys" do
           it "should fetch orders" do
             buys = @client.buys
-            a_post("/APIv1/#{currency}/GetOrders").should have_been_made
+            a_post("/APIv1/#{currency}/GetOrders").
+              should have_been_made
             buys.last.price.should == 0.011
+            buys.last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
           end
         end
 
         describe "sells" do
           it "should fetch sells" do
             sells = @client.sells
-            a_post("/APIv1/#{currency}/GetOrders").should have_been_made
+            a_post("/APIv1/#{currency}/GetOrders").
+              should have_been_made
             sells.last.price.should == 30
+            sells.last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
           end
         end
 
         describe "orders" do
           it "should fetch both buys and sells, with only one call" do
             orders = @client.orders
-            a_post("/APIv1/#{currency}/GetOrders").should have_been_made.once
-            orders.last.price.should == 30
+            a_post("/APIv1/#{currency}/GetOrders").
+              should have_been_made.once
+            orders[:buys].last.price.should == 0.011
+            orders[:buys].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
+            orders[:sells].last.price.should == 30
+            orders[:sells].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
           end
         end
       end
@@ -176,10 +192,14 @@ describe TradeHill::Client do
         end
 
         it "should place a bid" do
-          @client.buy!(0.88, 0.89)
+          buy = @client.buy!(0.88, 0.89)
           a_post("/APIv1/#{currency}/BuyBTC").
             with(:body => {"name" => "my_name", "pass" => "my_password", "amount" => "0.88", "price" => "0.89"}).
             should have_been_made
+          buy[:buys].last.price.should == 0.011
+          buy[:buys].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
+          buy[:sells].last.price.should == 30
+          buy[:sells].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
         end
       end
 
@@ -190,15 +210,21 @@ describe TradeHill::Client do
         end
 
         it "should place an ask" do
-          @client.sell!(0.88, 89.0)
+          sell = @client.sell!(0.88, 89.0)
           a_post("/APIv1/#{currency}/SellBTC").
             with(:body => {"name" => "my_name", "pass" => "my_password", "amount" => "0.88", "price" => "89.0"}).
             should have_been_made
+          sell[:buys].last.price.should == 0.011
+          sell[:buys].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
+          sell[:sells].last.price.should == 30
+          sell[:sells].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
         end
       end
 
       describe "cancel" do
         before do
+          stub_post("/APIv1/#{currency}/GetOrders").
+            to_return(:status => 200, :body => fixture('orders.json'))
           stub_post("/APIv1/#{currency}/CancelOrder").
             with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
             to_return(:status => 200, :body => fixture('orders.json'))
@@ -206,19 +232,30 @@ describe TradeHill::Client do
 
         context "with an oid passed" do
           it "should cancel an order" do
-            @client.cancel(3166)
+            cancel = @client.cancel(3166)
             a_post("/APIv1/#{currency}/CancelOrder").
               with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
               should have_been_made
+            cancel[:buys].last.price.should == 0.011
+            cancel[:buys].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
+            cancel[:sells].last.price.should == 30
+            cancel[:sells].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
           end
         end
 
         context "with an order passed" do
           it "should cancel an order" do
-            @client.cancel({'oid' => "3166"})
+            order = @client.buys.first
+            cancel = @client.cancel(order)
+            a_post("/APIv1/#{currency}/GetOrders").
+              should have_been_made
             a_post("/APIv1/#{currency}/CancelOrder").
               with(:body => {"name" => "my_name", "pass" => "my_password", "oid" => "3166"}).
               should have_been_made
+            cancel[:buys].last.price.should == 0.011
+            cancel[:buys].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
+            cancel[:sells].last.price.should == 30
+            cancel[:sells].last.date.should == Time.utc(2011, 6, 22, 14, 56, 39)
           end
         end
       end

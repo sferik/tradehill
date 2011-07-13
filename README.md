@@ -42,7 +42,7 @@ Usage Examples
       config.pass = YOUR_TRADEHILL_PASSWORD
     end
 
-    # Get your current balance
+    # Fetch your current balance
     puts TradeHill.balance
 
     # Place a limit order to buy one bitcoin for $0.011

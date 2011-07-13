@@ -1,5 +1,7 @@
 require 'tradehill/ask'
 require 'tradehill/bid'
+require 'tradehill/buy'
+require 'tradehill/sell'
 require 'tradehill/configuration'
 require 'tradehill/connection'
 require 'tradehill/max_bid'
@@ -39,46 +41,46 @@ module TradeHill
 
     # Fetch both bids and asks in one call, for network efficiency
     #
-    # @return [Hashie::Rash]
+    # @return [Hash] with keys :asks and :bids, which contain arrays as described in {TradeHill::Client#asks} and {TradeHill::Client#bids}
     # @example
     #   TradeHill.offers
     def offers
       offers = get('Orderbook')
-      offers['asks'] = offers['asks'].sort_by do |ask|
+      asks = offers['asks'].sort_by do |ask|
         ask[0].to_f
       end.map! do |ask|
         Ask.new(*ask)
       end
-      offers['bids'] = offers['bids'].sort_by do |bid|
+      bids = offers['bids'].sort_by do |bid|
         -bid[0].to_f
       end.map! do |bid|
         Bid.new(*bid)
       end
-      offers
+      {:asks => asks, :bids => bids}
     end
 
     # Fetch open asks
     #
-    # @return [Array<Ask>]
+    # @return [Array<TradeHill::Ask>] an array of open asks, sorted in price ascending order
     # @example
     #   TradeHill.asks
     def asks
-      offers['asks']
+      offers[:asks]
     end
 
     # Fetch open bids
     #
-    # @return [Array<Bid>]
+    # @return [Array<TradeHill::Bid>] an array of open bids, sorted in price descending order
     # @example
     #   TradeHill.bids
     def bids
-      offers['bids']
+      offers[:bids]
     end
 
     # Fetch the lowest priced ask
     #
     # @authenticated false
-    # @return [MinAsk]
+    # @return [TradeHill::MinAsk]
     # @example
     #   TradeHill.min_ask
     def min_ask
@@ -91,7 +93,7 @@ module TradeHill
     # Fetch the highest priced bid
     #
     # @authenticated false
-    # @return [MinBid]
+    # @return [TradeHill::MinBid]
     # @example
     #   TradeHill.max_bid
     def max_bid
@@ -114,7 +116,7 @@ module TradeHill
       end
     end
 
-    # Fetch your balance
+    # Fetch your current balance
     #
     # @return [Hashie::Rash]
     # @example
@@ -132,7 +134,7 @@ module TradeHill
 
     # Fetch a list of open orders
     #
-    # @return [<Hashie::Rash>]
+    # @return [Hash] with keys :buys and :sells, which contain arrays as described in {TradeHill::Client#buys} and {TradeHill::Client#sells}
     # @example
     #   TradeHill.orders
     def orders
@@ -141,31 +143,27 @@ module TradeHill
 
     # Fetch your open buys
     #
-    # @return [Array<Hashie::Rash>]
+    # @return [Array<TradeHill::Buy>] an array of your open bids, sorted by date
     # @example
     #   TradeHill.buys
     def buys
-      orders.select do |o|
-        o['type'] == ORDER_TYPES[:buy]
-      end
+      orders[:buys]
     end
 
     # Fetch your open sells
     #
-    # @return [Array<Hashie::Rash>]
+    # @return [Array<TradeHill::Sell>] an array of your open asks, sorted by date
     # @example
     #   TradeHill.sells
     def sells
-      orders.select do |o|
-        o['type'] == ORDER_TYPES[:sell]
-      end
+      orders[:sells]
     end
 
     # Place a limit order to buy BTC
     #
     # @param amount [Numeric] the number of bitcoins to purchase
     # @param price [Numeric] the bid price in US dollars
-    # @return [Array<Hashie::Rash>]
+    # @return [Hash] with keys :buys and :sells, which contain arrays as described in {TradeHill::Client#buys} and {TradeHill::Client#sells}
     # @example
     #   # Buy one bitcoin for $0.011
     #   TradeHill.buy! 1.0, 0.011
@@ -177,7 +175,7 @@ module TradeHill
     #
     # @param amount [Numeric] the number of bitcoins to sell
     # @param price [Numeric] the ask price in US dollars
-    # @return [Array<Hashie::Rash>]
+    # @return [Hash] with keys :buys and :sells, which contain arrays as described in {TradeHill::Client#buys} and {TradeHill::Client#sells}
     # @example
     #   # Sell one bitcoin for $100
     #   TradeHill.sell! 1.0, 100.0
@@ -189,22 +187,21 @@ module TradeHill
     #
     # @overload cancel(oid)
     #   @param oid [String] an order ID
-    #   @return Array<Hashie::Rash>
+    #   @return [Hash] with keys :buys and :sells, which contain arrays as described in {TradeHill::Client#buys} and {TradeHill::Client#sells}
     #   @example
     #     my_order = TradeHill.orders.first
     #     TradeHill.cancel my_order.oid
     #     TradeHill.cancel 1234567890
     # @overload cancel(order)
     #   @param order [Hash] a hash-like object, with keys `oid` - the order ID of the transaction to cancel and `type` - the type
-    #   @return Array<Hashie::Rash>
+    #   @return [Hash] with keys :buys and :sells, which contain arrays as described in {TradeHill::Client#buys} and {TradeHill::Client#sells}
     #   @example
     #     my_order = TradeHill.orders.first
     #     TradeHill.cancel my_order
     #     TradeHill.cancel {"oid" => 1234567890}
     def cancel(args)
-      if args.is_a?(Hash)
-        order = args.delete_if{|k, v| 'oid' != k.to_s}
-        parse_orders(post('CancelOrder', pass_params.merge(order))['orders'])
+      if args.is_a?(Order)
+        parse_orders(post('CancelOrder', pass_params.merge(:oid => args.id))['orders'])
       else
         parse_orders(post('CancelOrder', pass_params.merge(:oid => args))['orders'])
       end
@@ -213,12 +210,17 @@ module TradeHill
     private
 
     def parse_orders(orders)
-      orders.each do |order|
-        order['amount'] = order['amount'].to_f
-        order['date'] = Time.at(order['date'])
-        order['price'] = order['price'].to_f
-        order['reserved_amount'] = order['reserved_amount'].to_f
+      buys = []
+      sells = []
+      orders.sort_by{|order| order['date']}.each do |order|
+        case order['type']
+        when ORDER_TYPES[:sell]
+          sells << Sell.new(order)
+        when ORDER_TYPES[:buy]
+          buys << Buy.new(order)
+        end
       end
+      {:buys => buys, :sells => sells}
     end
 
     def pass_params
