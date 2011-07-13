@@ -6,8 +6,8 @@ module TradeHill
     VALID_OPTIONS_KEYS = [
       :commission,
       :currency,
-      :name,
-      :pass,
+      :password,
+      :username,
       :version,
     ]
 
@@ -40,8 +40,8 @@ module TradeHill
     def reset
       self.commission = DEFAULT_COMMISSION
       self.currency   = DEFAULT_CURRENCY
-      self.name       = nil
-      self.pass       = nil
+      self.password   = nil
+      self.username   = nil
       self.version    = DEFAULT_VERSION
       self
     end

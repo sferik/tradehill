@@ -6,8 +6,8 @@ describe TradeHill::Client do
       before do
         TradeHill.configure do |config|
           config.currency = currency
-          config.name     = "my_name"
-          config.pass     = "my_password"
+          config.username = "my_name"
+          config.password = "my_password"
         end
         @client = TradeHill::Client.new
       end

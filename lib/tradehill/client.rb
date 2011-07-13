@@ -222,7 +222,7 @@ module TradeHill
     end
 
     def pass_params
-      {:name => name, :pass => pass}
+      {:name => username, :pass => password}
     end
   end
 end
