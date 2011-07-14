@@ -1,14 +1,15 @@
 require 'tradehill/ask'
+require 'tradehill/balance'
 require 'tradehill/bid'
 require 'tradehill/buy'
-require 'tradehill/sell'
-require 'tradehill/ticker'
-require 'tradehill/trade'
 require 'tradehill/configuration'
 require 'tradehill/connection'
 require 'tradehill/max_bid'
 require 'tradehill/min_ask'
 require 'tradehill/request'
+require 'tradehill/sell'
+require 'tradehill/ticker'
+require 'tradehill/trade'
 
 module TradeHill
   class Client
@@ -27,7 +28,7 @@ module TradeHill
 
     # Fetch the latest ticker data
     #
-    # @return [Hashie::Rash]
+    # @return [TradeHill::Ticker]
     # @example
     #   TradeHill.ticker
     def ticker
@@ -118,18 +119,15 @@ module TradeHill
 
     # Fetch your current balance
     #
-    # @return [Hashie::Rash]
+    # @return [Array<TradeHill::Balance>]
     # @example
     #   TradeHill.balance
     def balance
       balance = post('GetBalance', pass_params)
-      balance['BTC'] = balance['BTC'].to_f
-      balance['BTC_Available'] = balance['BTC_Available'].to_f
-      balance['BTC_Reserved'] = balance['BTC_Reserved'].to_f
-      balance['USD'] = balance['USD'].to_f
-      balance['USD_Available'] = balance['USD_Available'].to_f
-      balance['USD_Reserved'] = balance['USD_Reserved'].to_f
-      balance
+      balances = []
+      balances << Balance.new('BTC', balance['BTC'])
+      balances << Balance.new('USD', balance['USD'])
+      balances
     end
 
     # Fetch a list of open orders
@@ -198,7 +196,7 @@ module TradeHill
     #   @example
     #     my_order = TradeHill.orders.first
     #     TradeHill.cancel my_order
-    #     TradeHill.cancel {"oid" => 1234567890}
+    #     TradeHill.cancel {'oid' => 1234567890}
     def cancel(args)
       if args.is_a?(Order)
         parse_orders(post('CancelOrder', pass_params.merge(:oid => args.id))['orders'])

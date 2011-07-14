@@ -141,8 +141,10 @@ describe TradeHill::Client do
           balance = @client.balance
           a_post("/APIv1/#{currency}/GetBalance").
             should have_been_made
-          balance.usd.should == 2.3450318173
-          balance.btc.should == 19.8514458363
+          balance.first.currency.should == "BTC"
+          balance.first.amount.should == 19.8514458363
+          balance.last.currency.should == "USD"
+          balance.last.amount.should == 2.3450318173
         end
       end
 
