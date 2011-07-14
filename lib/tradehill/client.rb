@@ -2,6 +2,7 @@ require 'tradehill/ask'
 require 'tradehill/bid'
 require 'tradehill/buy'
 require 'tradehill/sell'
+require 'tradehill/ticker'
 require 'tradehill/trade'
 require 'tradehill/configuration'
 require 'tradehill/connection'
@@ -31,13 +32,13 @@ module TradeHill
     #   TradeHill.ticker
     def ticker
       ticker = get('Ticker')['ticker']
-      ticker['buy']  = ticker['buy'].to_f
-      ticker['high'] = ticker['high'].to_f
-      ticker['last'] = ticker['last'].to_f
-      ticker['low']  = ticker['low'].to_f
-      ticker['sell'] = ticker['sell'].to_f
-      ticker['vol']  = ticker['vol'].to_i
-      ticker
+      Ticker.instance.buy    = ticker['buy'].to_f
+      Ticker.instance.high   = ticker['high'].to_f
+      Ticker.instance.price  = ticker['last'].to_f
+      Ticker.instance.low    = ticker['low'].to_f
+      Ticker.instance.sell   = ticker['sell'].to_f
+      Ticker.instance.volume = ticker['vol'].to_f
+      Ticker.instance
     end
 
     # Fetch both bids and asks in one call, for network efficiency

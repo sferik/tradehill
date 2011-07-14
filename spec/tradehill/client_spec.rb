@@ -26,8 +26,8 @@ describe TradeHill::Client do
           ticker.sell.should == 12.7
           ticker.high.should == 0.0
           ticker.low.should  == 0.0
-          ticker.last.should == 12.68
-          ticker.vol.should  == 0
+          ticker.price.should == 12.68
+          ticker.volume.should  == 0.0
         end
       end
 
