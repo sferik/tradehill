@@ -127,7 +127,7 @@ describe TradeHill::Client do
           trades.last.date.should == Time.utc(2011, 6, 16, 19, 07, 54)
           trades.last.price.should == 19.25
           trades.last.amount.should == 0.15
-          trades.last.tid.should == "4251"
+          trades.last.id.should == 4251
         end
       end
 

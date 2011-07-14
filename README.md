@@ -32,7 +32,7 @@ Usage Examples
     # Fetch open bids
     puts TradeHill.bids
 
-    # Fetch the last 48 hours worth of trades (takes a minute)
+    # Fetch recent trades
     puts TradeHill.trades
 
     # Certain methods require authentication

@@ -2,6 +2,7 @@ require 'tradehill/ask'
 require 'tradehill/bid'
 require 'tradehill/buy'
 require 'tradehill/sell'
+require 'tradehill/trade'
 require 'tradehill/configuration'
 require 'tradehill/connection'
 require 'tradehill/max_bid'
@@ -105,14 +106,12 @@ module TradeHill
 
     # Fetch recent trades
     #
-    # @return [Array<Hashie::Rash>]
+    # @return [Array<TradeHill::Trade>] an array of trades, sorted in chronological order
     # @example
     #   TradeHill.trades
     def trades
-      get('Trades').each do |t|
-        t['amount'] = t['amount'].to_f
-        t['date'] = Time.at(t['date'].to_i)
-        t['price'] = t['price'].to_f
+      get('Trades').sort_by{|trade| trade['date']}.map do |trade|
+        Trade.new(trade)
       end
     end
 
