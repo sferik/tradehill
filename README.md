@@ -19,7 +19,7 @@ Documentation
 
 Continuous Integration
 ----------------------
-[![Build Status](http://travis-ci.org/sferik/tradehill.png)](http://travis-ci.org/sferik/tradehill)
+[![Build Status](https://secure.travis-ci.org/sferik/tradehill.png)](http://travis-ci.org/sferik/tradehill)
 
 Usage Examples
 --------------
