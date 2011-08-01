@@ -38,8 +38,8 @@ Usage Examples
     # Certain methods require authentication
     TradeHill.configure do |config|
       config.currency = "USD" # This is the default
-      config.name = YOUR_TRADEHILL_USERNAME
-      config.pass = YOUR_TRADEHILL_PASSWORD
+      config.username = YOUR_TRADEHILL_USERNAME
+      config.password = YOUR_TRADEHILL_PASSWORD
     end
 
     # Fetch your current balance
