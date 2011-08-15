@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake', '~> 0.9'
   gem.add_development_dependency 'rspec', '~> 2.6'
   gem.add_development_dependency 'simplecov', '~> 0.4'
-  gem.add_development_dependency 'webmock', '~> 1.6'
+  gem.add_development_dependency 'webmock', '~> 1.7'
   gem.add_development_dependency 'yard', '~> 0.7'
   gem.author      = "Erik Michaels-Ober"
   gem.description = %q{Ruby wrapper for the TradeHill API. TradeHill is a Bitcoin exchange that supports 26 currencies.}
