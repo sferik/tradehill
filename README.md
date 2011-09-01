@@ -14,7 +14,7 @@ typing `btc` in your bash shell simply by setting the following alias:
 [http://rdoc.info/gems/tradehill](http://rdoc.info/gems/tradehill)
 
 ## <a name="ci">Continuous Integration</a>
-[![Build Status](https://secure.travis-ci.org/sferik/tradehill.png)](http://travis-ci.org/sferik/tradehill)
+[![Build Status](https://travis-ci.org/sferik/tradehill.png)](http://travis-ci.org/sferik/tradehill)
 
 ## <a name="examples">Usage Examples</a>
     require 'rubygems'
