@@ -13,7 +13,7 @@ module TradeHill
     def connection(options={})
       options = {
          :headers  => {
-           :user_agent => "tradehill gem #{TradeHill::VERSION}",
+           :user_agent => "tradehill gem #{TradeHill::Version}",
          },
         :ssl => {:verify => false},
         :url => 'https://api.tradehill.com',

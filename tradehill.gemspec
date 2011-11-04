@@ -21,5 +21,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.summary     = %q{Ruby wrapper for the TradeHill API}
   gem.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
-  gem.version     = TradeHill::VERSION.dup
+  gem.version     = TradeHill::Version.to_s
 end
