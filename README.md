@@ -20,6 +20,11 @@ typing `btc` in your bash shell simply by setting the following alias:
 
 [ci]: http://travis-ci.org/sferik/tradehill
 
+## <a name="dependencies"></a>Dependency Status
+[![Dependency Status](https://gemnasium.com/sferik/tradehill.png)][gemnasium]
+
+[gemnasium]: https://gemnasium.com/sferik/tradehill
+
 ## <a name="examples"></a>Usage Examples
     require 'rubygems'
     require 'tradehill'
@@ -104,8 +109,8 @@ This library aims to support and is [tested against][ci] the following Ruby
 implementations:
 
 * Ruby 1.8.7
-* Ruby 1.9.1
 * Ruby 1.9.2
+* Ruby 1.9.3
 * [JRuby][]
 * [Rubinius][]
 * [Ruby Enterprise Edition][ree]
