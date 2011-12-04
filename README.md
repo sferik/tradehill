@@ -21,7 +21,7 @@ typing `btc` in your bash shell simply by setting the following alias:
 [ci]: http://travis-ci.org/sferik/tradehill
 
 ## <a name="dependencies"></a>Dependency Status
-[![Dependency Status](https://gemnasium.com/sferik/tradehill.png)][gemnasium]
+[![Dependency Status](https://gemnasium.com/sferik/tradehill.png?travis)][gemnasium]
 
 [gemnasium]: https://gemnasium.com/sferik/tradehill
 
