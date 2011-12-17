@@ -1,5 +1,8 @@
-# Ruby wrapper for the TradeHill API
+# Ruby wrapper for the TradeHill API [![Build Status](https://secure.travis-ci.org/sferik/tradehill.png?branch=master)][travis] [![Dependency Status](https://gemnasium.com/sferik/tradehill.png?travis)][gemnasium]
 TradeHill is a Bitcoin exchange that supports 26 currencies.
+
+[travis]: http://travis-ci.org/sferik/tradehill
+[gemnasium]: https://gemnasium.com/sferik/tradehill
 
 ## <a name="installation"></a>Installation
     gem install tradehill
@@ -14,16 +17,6 @@ typing `btc` in your bash shell simply by setting the following alias:
 [http://rdoc.info/gems/tradehill][documentation]
 
 [documentation]: http://rdoc.info/gems/tradehill
-
-## <a name="build"></a>Build Status
-[![Build Status](https://secure.travis-ci.org/sferik/tradehill.png?branch=master)][travis]
-
-[travis]: http://travis-ci.org/sferik/tradehill
-
-## <a name="dependencies"></a>Dependency Status
-[![Dependency Status](https://gemnasium.com/sferik/tradehill.png?travis)][gemnasium]
-
-[gemnasium]: https://gemnasium.com/sferik/tradehill
 
 ## <a name="examples"></a>Usage Examples
     require 'rubygems'
