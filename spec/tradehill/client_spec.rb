@@ -1,6 +1,10 @@
 require 'helper'
 
 describe TradeHill::Client do
+  after do
+    TradeHill.reset
+  end
+
   %w(ARS AUD BTC BRL CAD CHF CLP CNY CZK DKK EUR GBP HKD ILS INR JPY LR MXN NZD NOK PEN PLN SGD ZAR SEK USD).each do |currency|
     context "with currency #{currency}" do
       before do
